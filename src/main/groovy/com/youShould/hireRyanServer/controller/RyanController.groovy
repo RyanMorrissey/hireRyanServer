@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController;
@@ -46,10 +47,9 @@ public class RyanController {
         return payload
     }
 
-    // not tested yet
-    @DeleteMapping("/deleteDatabaseTestById")
-    ClientPayload<Boolean> deleteDatabaseTestById(@RequestBody Long databaseTestId) {
-        Boolean isDeleted = databaseService.deleteDatabaseTest(databaseTestId)
+    @DeleteMapping("/deleteDatabaseTestById/{id}")
+    ClientPayload<Boolean> deleteDatabaseTestById(@PathVariable("id") Long id) {
+        Boolean isDeleted = databaseService.deleteDatabaseTest(id)
         ClientPayload<Boolean> payload = new ClientPayload<>()
         payload.setPayload(isDeleted)
         if (isDeleted) {

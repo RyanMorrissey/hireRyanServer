@@ -12,7 +12,8 @@ class DatabaseService {
     private DatabaseTestRepository databaseTestRepository
 
     List<DatabaseTest> getAllDatabaseTest() {
-        return databaseTestRepository.findAll()
+        List<DatabaseTest> allDatabaseTests = databaseTestRepository.findAll().sort { it.id }
+        return allDatabaseTests.findAll { !it.isDeleted }
     }
 
     DatabaseTest createOrUpdateDatabaseTest(DatabaseTest databaseTest) {
@@ -38,7 +39,6 @@ class DatabaseService {
             return false
         } else {
             existingDatabaseTest.isDeleted = true
-            // don't wanna push this until I test it, but ive held off pushing for a while now
             //databaseTestRepository.save(existingDatabaseTest)
         }
         return true
