@@ -27,9 +27,9 @@ public class RyanController {
     RyanController( ) {
     }
 
-    @GetMapping("/getAllDatabaseTests")
-    ClientPayload<List<DatabaseTest>> getAllDatabaseTests() {
-        List<DatabaseTest> databaseTests = databaseService.getAllDatabaseTest()
+    @GetMapping("/getAllDatabaseTestsByCookie/{cookie}")
+    ClientPayload<List<DatabaseTest>> getAllDatabaseTestsByCookie(@PathVariable("cookie") String cookie) {
+        List<DatabaseTest> databaseTests = databaseService.getAllDatabaseTestByCookie(cookie)
         ClientPayload<List<DatabaseTest>> payload = new ClientPayload<>(HttpStatus.OK, databaseTests)
         return payload
     }
@@ -47,9 +47,12 @@ public class RyanController {
         return payload
     }
 
-    @DeleteMapping("/deleteDatabaseTestById/{id}")
-    ClientPayload<Boolean> deleteDatabaseTestById(@PathVariable("id") Long id) {
-        Boolean isDeleted = databaseService.deleteDatabaseTest(id)
+    @DeleteMapping("/deleteDatabaseTestByIdAndCookie/{id}/{cookie}")
+    ClientPayload<Boolean> deleteDatabaseTestById(
+            @PathVariable("id") String id,
+            @PathVariable("cookie") String cookie
+    ) {
+        Boolean isDeleted = databaseService.deleteDatabaseTestByIdAndCookie(id, cookie)
         ClientPayload<Boolean> payload = new ClientPayload<>()
         payload.setPayload(isDeleted)
         if (isDeleted) {

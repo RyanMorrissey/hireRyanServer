@@ -11,9 +11,9 @@ class DatabaseService {
     @Autowired
     private DatabaseTestRepository databaseTestRepository
 
-    List<DatabaseTest> getAllDatabaseTest() {
+    List<DatabaseTest> getAllDatabaseTestByCookie(String cookie) {
         List<DatabaseTest> allDatabaseTests = databaseTestRepository.findAll().sort { it.id }
-        return allDatabaseTests.findAll { !it.isDeleted }
+        return allDatabaseTests.findAll { !it.isDeleted && it.browserCookie == cookie }
     }
 
     DatabaseTest createOrUpdateDatabaseTest(DatabaseTest databaseTest) {
@@ -22,7 +22,7 @@ class DatabaseService {
             databaseTestRepository.save(databaseTest)
         } else { // update flow
             DatabaseTest existingDatabaseTest = databaseTestRepository.findById(databaseTest.id).orElse(null)
-            if (existingDatabaseTest == null) {
+            if (existingDatabaseTest == null || existingDatabaseTest.browserCookie != databaseTest.browserCookie) {
                 return null
             } else {
                 existingDatabaseTest.value = databaseTest.value
@@ -33,13 +33,13 @@ class DatabaseService {
         return databaseTest
     }
 
-    boolean deleteDatabaseTest(Long id) {
-        DatabaseTest existingDatabaseTest = databaseTestRepository.findById(id).orElse(null)
-        if (existingDatabaseTest == null) {
+    boolean deleteDatabaseTestByIdAndCookie(String id, String cookie) {
+        DatabaseTest existingDatabaseTest = databaseTestRepository.findById(id.toInteger()).orElse(null)
+        if (existingDatabaseTest == null || existingDatabaseTest.browserCookie != cookie) {
             return false
         } else {
             existingDatabaseTest.isDeleted = true
-            //databaseTestRepository.save(existingDatabaseTest)
+            databaseTestRepository.save(existingDatabaseTest)
         }
         return true
     }

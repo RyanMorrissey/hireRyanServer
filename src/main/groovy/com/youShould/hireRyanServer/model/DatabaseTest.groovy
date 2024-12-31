@@ -7,12 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository
 class DatabaseTest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id
+    Integer id
 
     String value
     Date dateCreated
     Date dateUpdated
     boolean isDeleted
+    String browserCookie
 
     void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated ?: new Date()
