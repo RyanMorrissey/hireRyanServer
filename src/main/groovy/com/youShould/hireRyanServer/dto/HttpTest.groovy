@@ -3,7 +3,7 @@ package com.youShould.hireRyanServer.dto
 class HttpTest {
 
     private long id;
-    private String value;
+    private String note;
 
     public void setId(long id) {
         this.id = id
@@ -13,11 +13,11 @@ class HttpTest {
         return this.id;
     }
 
-    public void setValue(String value) {
-        this.value = value
+    public void setNote(String note) {
+        this.note = note
     }
 
-    public String getValue() {
-        return this.value;
+    public String getNote() {
+        return this.note;
     }
 }

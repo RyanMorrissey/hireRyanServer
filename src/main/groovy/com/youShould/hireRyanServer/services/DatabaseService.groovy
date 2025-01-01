@@ -25,7 +25,7 @@ class DatabaseService {
             if (existingDatabaseTest == null || existingDatabaseTest.browserCookie != databaseTest.browserCookie) {
                 return null
             } else {
-                existingDatabaseTest.value = databaseTest.value
+                existingDatabaseTest.note = databaseTest.note
                 existingDatabaseTest.dateUpdated = new Date()
                 databaseTestRepository.save(existingDatabaseTest)
             }

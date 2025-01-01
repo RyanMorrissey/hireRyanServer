@@ -9,7 +9,7 @@ class DatabaseTest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id
 
-    String value
+    String note
     Date dateCreated
     Date dateUpdated
     boolean isDeleted
