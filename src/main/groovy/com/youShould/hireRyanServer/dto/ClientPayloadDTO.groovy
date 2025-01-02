@@ -2,14 +2,14 @@ package com.youShould.hireRyanServer.dto
 
 import org.springframework.http.HttpStatus;
 
-class ClientPayload<T> {
+class ClientPayloadDTO<T> {
     HttpStatus status
     String note
     T payload
 
-    ClientPayload() {}
+    ClientPayloadDTO() {}
 
-    ClientPayload(HttpStatus status, T payload) {
+    ClientPayloadDTO(HttpStatus status, T payload) {
         this.status = status
         this.payload = payload
     }

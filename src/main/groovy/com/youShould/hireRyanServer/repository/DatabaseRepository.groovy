@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 // Don't really see myself using this outside of running some stored procedures?
+// I am going to keep it in case I do need to use it later
 
 @Repository
 class DatabaseRepository {

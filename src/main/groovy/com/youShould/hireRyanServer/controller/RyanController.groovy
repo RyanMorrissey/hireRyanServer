@@ -1,6 +1,7 @@
 package com.youShould.hireRyanServer.controller
 
-import com.youShould.hireRyanServer.dto.ClientPayload
+import com.youShould.hireRyanServer.dto.ClientPayloadDTO
+import com.youShould.hireRyanServer.dto.DatabaseTestDTO
 import com.youShould.hireRyanServer.model.DatabaseTest
 import com.youShould.hireRyanServer.services.DatabaseService
 import org.slf4j.Logger;
@@ -27,19 +28,31 @@ public class RyanController {
     RyanController( ) {
     }
 
-    @GetMapping("/getAllDatabaseTestsByCookie/{cookie}")
-    ClientPayload<List<DatabaseTest>> getAllDatabaseTestsByCookie(@PathVariable("cookie") String cookie) {
-        List<DatabaseTest> databaseTests = databaseService.getAllDatabaseTestByCookie(cookie)
-        ClientPayload<List<DatabaseTest>> payload = new ClientPayload<>(HttpStatus.OK, databaseTests)
+    @GetMapping("/")
+    public String testRoot() {
+        return "yup it works";
+    }
+
+    @GetMapping("/health")
+    public String healthCheck() {
+        logger.info("Health checked")
+        return "Healthy";
+    }
+
+    @GetMapping("/getAllDatabaseTestsByCookie/{browserCookie}")
+    ClientPayloadDTO<List<DatabaseTestDTO>> getAllDatabaseTestsByCookie(@PathVariable("browserCookie") String browserCookie) {
+        List<DatabaseTest> databaseTests = databaseService.getAllDatabaseTestByCookie(browserCookie)
+        List<DatabaseTestDTO> databaseTestDTOs = databaseTests.collect { databaseService.convertDatabaseTestToDTO(it) }
+        ClientPayloadDTO<List<DatabaseTestDTO>> payload = new ClientPayloadDTO<>(HttpStatus.OK, databaseTestDTOs)
         return payload
     }
 
     @PostMapping("/createOrUpdateDatabaseTest")
-    ClientPayload<DatabaseTest> createOrUpdateDatabaseTest(@RequestBody DatabaseTest databaseTest) {
-        DatabaseTest newDatabaseTest = databaseService.createOrUpdateDatabaseTest(databaseTest)
-        ClientPayload<DatabaseTest> payload = new ClientPayload<>()
-        payload.setPayload(newDatabaseTest)
-        if (newDatabaseTest != null) {
+    ClientPayloadDTO<Boolean> createOrUpdateDatabaseTest(@RequestBody DatabaseTestDTO databaseTestDTO) {
+        boolean wasCreatedOrUpdated = databaseService.createOrUpdateDatabaseTest(databaseTestDTO)
+        ClientPayloadDTO<Boolean> payload = new ClientPayloadDTO<>()
+        payload.setPayload(wasCreatedOrUpdated)
+        if (wasCreatedOrUpdated) {
             payload.setStatus(HttpStatus.OK)
         } else {
             payload.setStatus(HttpStatus.NOT_FOUND)
@@ -48,12 +61,12 @@ public class RyanController {
     }
 
     @DeleteMapping("/deleteDatabaseTestByIdAndCookie/{id}/{cookie}")
-    ClientPayload<Boolean> deleteDatabaseTestById(
+    ClientPayloadDTO<Boolean> deleteDatabaseTestById(
             @PathVariable("id") String id,
             @PathVariable("cookie") String cookie
     ) {
         Boolean isDeleted = databaseService.deleteDatabaseTestByIdAndCookie(id, cookie)
-        ClientPayload<Boolean> payload = new ClientPayload<>()
+        ClientPayloadDTO<Boolean> payload = new ClientPayloadDTO<>()
         payload.setPayload(isDeleted)
         if (isDeleted) {
             payload.setStatus(HttpStatus.OK)
